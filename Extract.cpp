@@ -6,7 +6,7 @@
 #define D 106
 
 //////////////////////////////////////////////////////////////////////////////////////////
-//// ÃßÃâ
+//// ì¶”ì¶œ
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void ExtractWatermark(Mat& marked_img)
@@ -19,26 +19,26 @@ void Extract(Mat& Marked_Image)
 {
 	//imshow("Marked_Image", Marked_Image);
 	////////////////////////////////
-	getPSNR(Marked_Image);         // ¿øº» ÀÌ¹ÌÁö¿Í »ğÀÔ ÀÌ¹ÌÁöÀÇ PSNR °ª °è»êÀ» À§ÇÔ
+	getPSNR(Marked_Image);         // ì›ë³¸ ì´ë¯¸ì§€ì™€ ì‚½ì… ì´ë¯¸ì§€ì˜ PSNR ê°’ ê³„ì‚°ì„ ìœ„í•¨
 	////////////////////////////////
 	Mat yuv_arr[3];
 	cvtColor(Marked_Image, Marked_Image, COLOR_RGB2YCrCb);   // RGB to YCrCb
-	split(Marked_Image, yuv_arr);                      // Ã¤³Î ºĞ¸®
+	split(Marked_Image, yuv_arr);                      // ì±„ë„ ë¶„ë¦¬
 	Mat Marked_Y_channel = Mat(Marked_Image.cols, Marked_Image.rows, Marked_Image.type());
 	int QRcodeSize;
 
-	yuv_arr[0].copyTo(Marked_Y_channel);                // Y Ã¤³Î ºĞ¸®
+	yuv_arr[0].copyTo(Marked_Y_channel);                // Y ì±„ë„ ë¶„ë¦¬
 
-	// ÃßÃâÇÑ QRcode °è¼öµéÀ» ÀúÀåÇÒ Çà·Ä
+	// ì¶”ì¶œí•œ QRcode ê³„ìˆ˜ë“¤ì„ ì €ì¥í•  í–‰ë ¬
 	Mat HH_recoverd_QRcode_Pixel = Mat(32, 32, CV_8UC1);
 	Mat LH_recoverd_QRcode_Pixel = Mat(32, 32, CV_8UC1);
 	Mat HL_recoverd_QRcode_Pixel = Mat(32, 32, CV_8UC1);
 
 	Mat WT_result;
 	yuv_arr[0].convertTo(Marked_Y_channel, CV_32F);      //uchar -> float
-	WT(Marked_Y_channel, WT_result, 1);               // ºĞ¸®ÇÑ Y Ã¤³ÎÀ» ´ë»óÀ¸·Î 1´Ü°è DWT ÁøÇà
+	WT(Marked_Y_channel, WT_result, 1);               // ë¶„ë¦¬í•œ Y ì±„ë„ì„ ëŒ€ìƒìœ¼ë¡œ 1ë‹¨ê³„ DWT ì§„í–‰
 
-	// ºÎ´ë¿ªÀÇ °è¼ö¸¦ ÀúÀåÇÒ Çà·Ä º¯¼ö
+	// ë¶€ëŒ€ì—­ì˜ ê³„ìˆ˜ë¥¼ ì €ì¥í•  í–‰ë ¬ ë³€ìˆ˜
 //	Mat HH_subband = Mat(WT_result.cols / 2, WT_result.rows / 2, WT_result.type());
 //	Mat HL_subband = Mat(WT_result.cols / 2, WT_result.rows / 2, WT_result.type());
 	Mat LH_subband = Mat(WT_result.cols / 2, WT_result.rows / 2, WT_result.type());
@@ -47,14 +47,14 @@ void Extract(Mat& Marked_Image)
 //	HL_subband = WT_result(Rect(WT_result.cols / 2, 0, WT_result.cols / 2, WT_result.rows / 2));
 	LH_subband = WT_result(Rect(0, WT_result.rows / 2, WT_result.cols / 2, WT_result.rows / 2));
 
-	// DCT¸¦ ÁøÇàÇÒ 8x8 Å©±âÀÇ ºí·°µé
+	// DCTë¥¼ ì§„í–‰í•  8x8 í¬ê¸°ì˜ ë¸”ëŸ­ë“¤
 	Size blockSize(8, 8);
-//	vector<Mat> HH_blocks;   // °¢ ºÎ´ë¿ªÀÇ ºí·°µé
+//	vector<Mat> HH_blocks;   // ê° ë¶€ëŒ€ì—­ì˜ ë¸”ëŸ­ë“¤
 //	vector<Mat> HL_blocks;
 	vector<Mat> LH_blocks;
 	int i = 0;
 
-	// 256x256 Å©±âÀÇ ºÎ´ë¿ªÀ» 1024°³ÀÇ 8x8 ºí·° »çÀÌÁî·Î ºĞÇÒ
+	// 256x256 í¬ê¸°ì˜ ë¶€ëŒ€ì—­ì„ 1024ê°œì˜ 8x8 ë¸”ëŸ­ ì‚¬ì´ì¦ˆë¡œ ë¶„í• 
 	for (int y = 0; y < 256; y += blockSize.height)
 	{
 		for (int x = 0; x < 256; x += blockSize.width)
@@ -67,15 +67,15 @@ void Extract(Mat& Marked_Image)
 	}
 
 	int x = 0, y = 0;
-	// °¢ ºÎ´ë¿ªÀÇ 1024°³ÀÇ ºí·°µéÀ» ´ë»óÀ¸·Î »ğÀÔµÈ ¿öÅÍ¸¶Å© ÃßÃâ ÁøÇà
+	// ê° ë¶€ëŒ€ì—­ì˜ 1024ê°œì˜ ë¸”ëŸ­ë“¤ì„ ëŒ€ìƒìœ¼ë¡œ ì‚½ì…ëœ ì›Œí„°ë§ˆí¬ ì¶”ì¶œ ì§„í–‰
 	for (int i = 0; i < 1024; i++)
 	{
-		// DCT ÁøÇà
+		// DCT ì§„í–‰
 	//	dct(HH_blocks[i], HH_blocks[i]);
 	//	dct(HL_blocks[i], HL_blocks[i]);
 		dct(LH_blocks[i], LH_blocks[i]);
 
-		// DCT ÁøÇà ÈÄ °ªµéÀÇ DC °ªÀ» ±âÁØÀ¸·Î »ğÀÔµÈ QR Àç»ı¼º
+		// DCT ì§„í–‰ í›„ ê°’ë“¤ì˜ DC ê°’ì„ ê¸°ì¤€ìœ¼ë¡œ ì‚½ì…ëœ QR ì¬ìƒì„±
 	//	float HH_sum = HH_blocks[i].at<float>(0, 0);
 	//	float HL_sum = HL_blocks[i].at<float>(0, 0);
 		float LH_sum = LH_blocks[i].at<float>(0, 0);
@@ -91,13 +91,13 @@ void Extract(Mat& Marked_Image)
 		}
 	}
 
-	// QRcode¸¦ »ı¼ºÇÒ Çà·Ä º¯¼ö ¼³Á¤
+	// QRcodeë¥¼ ìƒì„±í•  í–‰ë ¬ ë³€ìˆ˜ ì„¤ì •
 	QRcodeSize = HL_recoverd_QRcode_Pixel.rows;
 //	Mat QR_HH(QRcodeSize + 2, QRcodeSize + 2, HH_recoverd_QRcode_Pixel.type(), Scalar(255));
 //	Mat QR_HL(QRcodeSize + 2, QRcodeSize + 2, HL_recoverd_QRcode_Pixel.type(), Scalar(255));
 	Mat QR_LH(QRcodeSize + 2, QRcodeSize + 2, LH_recoverd_QRcode_Pixel.type(), Scalar(255));
 
-	// °áÁ¤µÈ QRcodeÀÇ ÇÈ¼¿ °ªÀ» À§Ä¡¿¡ ¸Â°Ô ÀúÀå
+	// ê²°ì •ëœ QRcodeì˜ í”½ì…€ ê°’ì„ ìœ„ì¹˜ì— ë§ê²Œ ì €ì¥
 	for (int i = 0; i < 32; i++)
 	{
 		for (int j = 0; j < 32; j++)
@@ -115,7 +115,7 @@ void Extract(Mat& Marked_Image)
 	Mat BIG_QR_LH(100, 100, LH_recoverd_QRcode_Pixel.type(), Scalar(255));
 
 	int nn = 0;
-	// 32x32 Å©±âÀÇ QRÀÇ Å©±â È®Àå
+	// 32x32 í¬ê¸°ì˜ QRì˜ í¬ê¸° í™•ì¥
 	for (int i = 0; i < 32; i++)
 	{
 		for (int j = 0; j < 32; j++)
@@ -161,20 +161,20 @@ void Extract(Mat& Marked_Image)
 //	imwrite("HL_QRcode.png", BIG_QR_HL);
 	imwrite("C:/Users/KJY/Desktop/result/DWT_DCT_LH_QRcode.png", BIG_QR_LH);
 	
-	getNCC();      // »ğÀÔµÈ ¿öÅÍ¸¶Å©¿Í ÃßÃâµÈ ¿öÅÍ¸¶Å© °£ NCC °ª °è»ê
+	getNCC();      // ì‚½ì…ëœ ì›Œí„°ë§ˆí¬ì™€ ì¶”ì¶œëœ ì›Œí„°ë§ˆí¬ ê°„ NCC ê°’ ê³„ì‚°
 }
 */
 
-/* DCT-CRT ÃßÃâ ÄÚµå 
+/* DCT-CRT ì¶”ì¶œ ì½”ë“œ 
 void Extract(Mat& Marked_Image)
 {
 	//imshow("Marked_Image", Marked_Image);
 	////////////////////////////////
-	getPSNR(Marked_Image);         // ¿øº» ÀÌ¹ÌÁö¿Í »ğÀÔ ÀÌ¹ÌÁöÀÇ PSNR °ª °è»êÀ» À§ÇÔ
+	getPSNR(Marked_Image);         // ì›ë³¸ ì´ë¯¸ì§€ì™€ ì‚½ì… ì´ë¯¸ì§€ì˜ PSNR ê°’ ê³„ì‚°ì„ ìœ„í•¨
 	////////////////////////////////
 	Mat yuv_arr[3];
 	cvtColor(Marked_Image, Marked_Image, COLOR_RGB2YCrCb);   // RGB to YCrCb
-	split(Marked_Image, yuv_arr);                      // Ã¤³Î ºĞ¸®
+	split(Marked_Image, yuv_arr);                      // ì±„ë„ ë¶„ë¦¬
 	Mat Marked_Y_channel = Mat(Marked_Image.cols, Marked_Image.rows, Marked_Image.type());
 	int QRcodeSize;
 	
@@ -182,12 +182,12 @@ void Extract(Mat& Marked_Image)
 	
 	Mat ori_recoverd_QRcode_Pixel = Mat(32, 32, CV_8UC1);
 
-	// DCT¸¦ ÁøÇàÇÒ 8x8 Å©±âÀÇ ºí·°µé
+	// DCTë¥¼ ì§„í–‰í•  8x8 í¬ê¸°ì˜ ë¸”ëŸ­ë“¤
 	Size blockSize(8, 8);
 	vector<Mat> ori_blocks;
 	int i = 0;
 
-	// 256x256 Å©±âÀÇ ºÎ´ë¿ªÀ» 1024°³ÀÇ 8x8 ºí·° »çÀÌÁî·Î ºĞÇÒ
+	// 256x256 í¬ê¸°ì˜ ë¶€ëŒ€ì—­ì„ 1024ê°œì˜ 8x8 ë¸”ëŸ­ ì‚¬ì´ì¦ˆë¡œ ë¶„í• 
 	for (int y = 0; y < 256; y += blockSize.height)
 	{
 		for (int x = 0; x < 256; x += blockSize.width)
@@ -198,12 +198,12 @@ void Extract(Mat& Marked_Image)
 	}
 
 	int x = 0, y = 0;
-	// 1024°³ÀÇ 8*8 ºí·Ï¿¡ dct Àû¿ë ÈÄ °ª Ãâ·Â
+	// 1024ê°œì˜ 8*8 ë¸”ë¡ì— dct ì ìš© í›„ ê°’ ì¶œë ¥
 	for (int i = 0; i < 1024; i++)
 	{
 		dct(ori_blocks[i], ori_blocks[i]);
 	}
-	// °¢ ºÎ´ë¿ªÀÇ 1024°³ÀÇ ºí·°µéÀ» ´ë»óÀ¸·Î »ğÀÔµÈ ¿öÅÍ¸¶Å© ÃßÃâ ÁøÇà
+	// ê° ë¶€ëŒ€ì—­ì˜ 1024ê°œì˜ ë¸”ëŸ­ë“¤ì„ ëŒ€ìƒìœ¼ë¡œ ì‚½ì…ëœ ì›Œí„°ë§ˆí¬ ì¶”ì¶œ ì§„í–‰
 	for (int i = 0; i < 1024; i++)
 	{
 		int Z_ori = ori_blocks[i].at<float>(0, 0);
@@ -213,7 +213,7 @@ void Extract(Mat& Marked_Image)
 		int d_ori = abs(p_ori - q_ori);
 		int b_ori = p_ori + q_ori;
 
-		// ±âÁØ °ªÀ» ´ë»óÀ¸·Î QRÀÇ Èò ºÎºĞ°ú °ËÀº ºÎºĞ ±¸¼º
+		// ê¸°ì¤€ ê°’ì„ ëŒ€ìƒìœ¼ë¡œ QRì˜ í° ë¶€ë¶„ê³¼ ê²€ì€ ë¶€ë¶„ êµ¬ì„±
 		if (b_ori >= (D + 35) / 2) // watermark bit 1    d_ori >= (D) / 2  b_ori >= (D + 35) / 2
 		{
 			ori_recoverd_QRcode_Pixel.at<uchar>((int)(y), (int)(x++)) = 255;
@@ -229,11 +229,11 @@ void Extract(Mat& Marked_Image)
 		}
 	}
 
-	// QRcode¸¦ »ı¼ºÇÒ Çà·Ä º¯¼ö ¼³Á¤
+	// QRcodeë¥¼ ìƒì„±í•  í–‰ë ¬ ë³€ìˆ˜ ì„¤ì •
 	QRcodeSize = ori_recoverd_QRcode_Pixel.rows;
 	Mat QR_ori(QRcodeSize + 2, QRcodeSize + 2, ori_recoverd_QRcode_Pixel.type(), Scalar(255));
 
-	// °áÁ¤µÈ QRcodeÀÇ ÇÈ¼¿ °ªÀ» À§Ä¡¿¡ ¸Â°Ô ÀúÀå
+	// ê²°ì •ëœ QRcodeì˜ í”½ì…€ ê°’ì„ ìœ„ì¹˜ì— ë§ê²Œ ì €ì¥
 	for (int i = 0; i < 32; i++)
 	{
 		for (int j = 0; j < 32; j++)
@@ -245,7 +245,7 @@ void Extract(Mat& Marked_Image)
 	Mat BIG_QR_ori(100, 100, ori_recoverd_QRcode_Pixel.type(), Scalar(255));
 
 	int nn = 0;
-	// 32x32 Å©±âÀÇ QRÀÇ Å©±â È®Àå
+	// 32x32 í¬ê¸°ì˜ QRì˜ í¬ê¸° í™•ì¥
 	for (int i = 0; i < 32; i++)
 	{
 		for (int j = 0; j < 32; j++)
@@ -266,206 +266,22 @@ void Extract(Mat& Marked_Image)
 	//imshow("ori_QRcode", BIG_QR_ori);
 	imwrite("C:/Users/KJY/Desktop/result/DCT_CRT_QRcode.png", BIG_QR_ori);
 
-	getNCC();      // »ğÀÔµÈ ¿öÅÍ¸¶Å©¿Í ÃßÃâµÈ ¿öÅÍ¸¶Å© °£ NCC °ª °è»ê
+	getNCC();      // ì‚½ì…ëœ ì›Œí„°ë§ˆí¬ì™€ ì¶”ì¶œëœ ì›Œí„°ë§ˆí¬ ê°„ NCC ê°’ ê³„ì‚°
 }
 */
 
-/* DWT-DCT-CRT ÄÚµå */
-float Extract_CRT(Mat blocks)
-{
-	int Z = blocks.at<float>(0, 0);
-	if (Z == 40 || Z == 44)
-	{
-		//if()// ¿©±â¿¡ ¸ğµç ÇÈ¼¿ÀÌ °°À» Á¶°Ç Ãß°¡(´Ü»ö ÀÌ¹ÌÁö¿¡¸¸ ÇØ´ç½ÃÅ°±â À§ÇØ) ÇÏ¸é ´õ ÁÁÀ»µí
-		Z += 60; 
-	}
-	int p = Z % m;
-	int q = Z % n;
 
-	int d = abs(p - q);
-	int b = p + q;	
-
-	// ±âÁØ °ªÀ» ´ë»óÀ¸·Î QRÀÇ Èò ºÎºĞ°ú °ËÀº ºÎºĞ ±¸¼º
-	if (b >= (D + 35) / 2) // watermark bit 1 p=2, q=40 b=42 (D+35)/2=70.5
-	{
-		return 255;
-	}
-	else // watermark bit 0
-	{
-		return 0;
-	}
-}
-
-void Extract(Mat& Marked_Image)
-{
-	//imshow("Marked_Image", Marked_Image);
-	getPSNR(Marked_Image); // ¿øº» ÀÌ¹ÌÁö¿Í »ğÀÔ ÀÌ¹ÌÁöÀÇ PSNR °ª °è»êÀ» À§ÇÔ
-	getSSIM(Marked_Image); // ¿øº» ÀÌ¹ÌÁö¿Í »ğÀÔ ÀÌ¹ÌÁöÀÇ SSIM °ª °è»êÀ» À§ÇÔ
-
-	Mat yuv_arr[3];
-	cvtColor(Marked_Image, Marked_Image, COLOR_RGB2YCrCb);   // RGB to YCrCb
-	split(Marked_Image, yuv_arr);                      // Ã¤³Î ºĞ¸®
-	Mat Marked_Y_channel = Mat(Marked_Image.cols, Marked_Image.rows, Marked_Image.type());
-	int QRcodeSize;
-	
-	yuv_arr[0].copyTo(Marked_Y_channel);                // Y Ã¤³Î ºĞ¸®
-	yuv_arr[0].convertTo(Marked_Y_channel, CV_32F);    //uchar -> float
-
-	// ÃßÃâÇÑ QRcode °è¼öµéÀ» ÀúÀåÇÒ Çà·Ä
-//	Mat HH_recoverd_QRcode_Pixel = Mat(32, 32, CV_8UC1);
-	Mat LH_recoverd_QRcode_Pixel = Mat(32, 32, CV_8UC1);
-//	Mat HL_recoverd_QRcode_Pixel = Mat(32, 32, CV_8UC1);
-
-	Mat WT_result;
-	yuv_arr[0].convertTo(Marked_Y_channel, CV_32F);      //uchar -> float
-	WT(Marked_Y_channel, WT_result, 1);               // ºĞ¸®ÇÑ Y Ã¤³ÎÀ» ´ë»óÀ¸·Î 1´Ü°è DWT ÁøÇà
-	//imshow("Extracted_Image_WT", WT_result);
-
-	// ºÎ´ë¿ªÀÇ °è¼ö¸¦ ÀúÀåÇÒ Çà·Ä º¯¼ö
-//	Mat HH_subband = Mat(WT_result.cols / 2, WT_result.rows / 2, WT_result.type());
-//	Mat HL_subband = Mat(WT_result.cols / 2, WT_result.rows / 2, WT_result.type());
-	Mat LH_subband = Mat(WT_result.cols / 2, WT_result.rows / 2, WT_result.type());
-
-	//HH_subband = WT_result(Rect(WT_result.cols / 2, WT_result.rows / 2, WT_result.cols / 2, WT_result.rows / 2)); // HH
-	//HL_subband = WT_result(Rect(WT_result.cols / 2, 0, WT_result.cols / 2, WT_result.rows / 2));
-	LH_subband = WT_result(Rect(0, WT_result.rows / 2, WT_result.cols / 2, WT_result.rows / 2));
-	//LL_subband = WT_result(Rect(0, 0, WT_result.rows / 2, WT_result.cols / 2)); // LL
-
-	// DCT¸¦ ÁøÇàÇÒ 8x8 Å©±âÀÇ ºí·°µé
-	Size blockSize(8, 8);
-	//	vector<Mat> HH_blocks;   // °¢ ºÎ´ë¿ªÀÇ ºí·°µé
-	//	vector<Mat> HL_blocks;
-	vector<Mat> LH_blocks;
-
-	// 256x256 Å©±âÀÇ ºÎ´ë¿ªÀ» 1024°³ÀÇ 8x8 ºí·° »çÀÌÁî·Î ºĞÇÒ
-	for (int y = 0; y < 256; y += blockSize.height)
-	{
-		for (int x = 0; x < 256; x += blockSize.width)
-		{
-			Rect rect = Rect(x, y, blockSize.width, blockSize.height);
-			//			HH_blocks.push_back(Mat(HH_subband, rect));
-			//			HL_blocks.push_back(Mat(HL_subband, rect));
-			LH_blocks.push_back(Mat(LH_subband, rect));
-		}
-	}
-
-	int x = 0, y = 0;
-	//	cout << "EXTRACTED" << endl;
-	int enter = 0;
-//	cout << "Extracted DC Value" << endl;
-	// 1024°³ÀÇ 8*8 ºí·Ï¿¡ dct Àû¿ë ÈÄ °ª Ãâ·Â
-	for (int i = 0; i < 1024; i++)
-	{
-		//		dct(HH_blocks[i], HH_blocks[i]);
-		//		dct(HL_blocks[i], HL_blocks[i]);
-		dct(LH_blocks[i], LH_blocks[i]);
-		//if (LH_blocks[i].at<float>(0, 0) == 40) cout << "1 "; // QR ¸ğ¾ç´ë·Î ³ª¿À´ÂÁö È®ÀÎ
-		//else cout << "0 ";
-//		cout << LH_blocks[i].at<float>(0, 0) << " ";
-		enter++;
-		if (enter == 32)
-		{
-//			cout << endl;
-			enter = 0;
-		}
-	}
-
-	// °¢ ºÎ´ë¿ªÀÇ 1024°³ÀÇ ºí·°µéÀ» ´ë»óÀ¸·Î »ğÀÔµÈ ¿öÅÍ¸¶Å© ÃßÃâ ÁøÇà
-	for (int i = 0; i < 1024; i++)
-	{
-		//		HH_recoverd_QRcode_Pixel.at<uchar>((int)(y), (int)(x)) = Extract_CRT(HH_blocks[i]);
-		//		HL_recoverd_QRcode_Pixel.at<uchar>((int)(y), (int)(x++)) = Extract_CRT(HL_blocks[i]);
-		LH_recoverd_QRcode_Pixel.at<uchar>((int)(y), (int)(x++)) = Extract_CRT(LH_blocks[i]);
-
-		if (x == 32)
-		{
-			y++;
-			x = 0;
-		}
-	}
-
-	// QRcode¸¦ »ı¼ºÇÒ Çà·Ä º¯¼ö ¼³Á¤
-	QRcodeSize = LH_recoverd_QRcode_Pixel.rows;
-	//	Mat QR_HH(QRcodeSize + 2, QRcodeSize + 2, HH_recoverd_QRcode_Pixel.type(), Scalar(255));
-	//Mat QR_HL(QRcodeSize + 2, QRcodeSize + 2, HL_recoverd_QRcode_Pixel.type(), Scalar(255));
-	Mat QR_LH(QRcodeSize + 2, QRcodeSize + 2, LH_recoverd_QRcode_Pixel.type(), Scalar(255));
-
-	// °áÁ¤µÈ QRcodeÀÇ ÇÈ¼¿ °ªÀ» À§Ä¡¿¡ ¸Â°Ô ÀúÀå
-	for (int i = 0; i < 32; i++)
-	{
-		for (int j = 0; j < 32; j++)
-		{
-			//			QR_HH.at<uchar>(i + 1, j + 1) = HH_recoverd_QRcode_Pixel.at<uchar>(i, j);
-			//		QR_HL.at<uchar>(i + 1, j + 1) = HL_recoverd_QRcode_Pixel.at<uchar>(i, j);
-			QR_LH.at<uchar>(i + 1, j + 1) = LH_recoverd_QRcode_Pixel.at<uchar>(i, j);
-		}
-	}
-
-	// 32x32 Å©±âÀÇ QRÀÇ Å©±â 100x100À¸·Î È®Àå
-//	Mat BIG_QR_HH(100, 100, HH_recoverd_QRcode_Pixel.type(), Scalar(255));
-//	Mat BIG_QR_HL(100, 100, HL_recoverd_QRcode_Pixel.type(), Scalar(255));
-	Mat BIG_QR_LH(100, 100, LH_recoverd_QRcode_Pixel.type(), Scalar(255));
-	int nn = 0;
-	for (int i = 0; i < 32; i++)
-	{
-		for (int j = 0; j < 32; j++)
-		{
-			//			BIG_QR_HH.at<uchar>(n, 3 * j) = QR_HH.at<uchar>(i, j);
-			//			BIG_QR_HH.at<uchar>(n, 3 * j + 1) = QR_HH.at<uchar>(i, j);
-			//			BIG_QR_HH.at<uchar>(n, 3 * j + 2) = QR_HH.at<uchar>(i, j);
-			//			BIG_QR_HH.at<uchar>(n + 1, 3 * j) = QR_HH.at<uchar>(i, j);
-			//			BIG_QR_HH.at<uchar>(n + 1, 3 * j + 1) = QR_HH.at<uchar>(i, j);
-			//			BIG_QR_HH.at<uchar>(n + 1, 3 * j + 2) = QR_HH.at<uchar>(i, j);
-			//			BIG_QR_HH.at<uchar>(n + 2, 3 * j) = QR_HH.at<uchar>(i, j);
-			//			BIG_QR_HH.at<uchar>(n + 2, 3 * j + 1) = QR_HH.at<uchar>(i, j);
-			//			BIG_QR_HH.at<uchar>(n + 2, 3 * j + 2) = QR_HH.at<uchar>(i, j);
-
-			//			BIG_QR_HL.at<uchar>(nn, 3 * j) = QR_HL.at<uchar>(i, j);
-			//			BIG_QR_HL.at<uchar>(nn, 3 * j + 1) = QR_HL.at<uchar>(i, j);
-			//			BIG_QR_HL.at<uchar>(nn, 3 * j + 2) = QR_HL.at<uchar>(i, j);
-			//			BIG_QR_HL.at<uchar>(nn + 1, 3 * j) = QR_HL.at<uchar>(i, j);
-			//			BIG_QR_HL.at<uchar>(nn + 1, 3 * j + 1) = QR_HL.at<uchar>(i, j);
-			//			BIG_QR_HL.at<uchar>(nn + 1, 3 * j + 2) = QR_HL.at<uchar>(i, j);
-			//			BIG_QR_HL.at<uchar>(nn + 2, 3 * j) = QR_HL.at<uchar>(i, j);
-			//			BIG_QR_HL.at<uchar>(nn + 2, 3 * j + 1) = QR_HL.at<uchar>(i, j);
-			//			BIG_QR_HL.at<uchar>(nn + 2, 3 * j + 2) = QR_HL.at<uchar>(i, j);
-
-			BIG_QR_LH.at<uchar>(nn, 3 * j) = QR_LH.at<uchar>(i, j);
-			BIG_QR_LH.at<uchar>(nn, 3 * j + 1) = QR_LH.at<uchar>(i, j);
-			BIG_QR_LH.at<uchar>(nn, 3 * j + 2) = QR_LH.at<uchar>(i, j);
-			BIG_QR_LH.at<uchar>(nn + 1, 3 * j) = QR_LH.at<uchar>(i, j);
-			BIG_QR_LH.at<uchar>(nn + 1, 3 * j + 1) = QR_LH.at<uchar>(i, j);
-			BIG_QR_LH.at<uchar>(nn + 1, 3 * j + 2) = QR_LH.at<uchar>(i, j);
-			BIG_QR_LH.at<uchar>(nn + 2, 3 * j) = QR_LH.at<uchar>(i, j);
-			BIG_QR_LH.at<uchar>(nn + 2, 3 * j + 1) = QR_LH.at<uchar>(i, j);
-			BIG_QR_LH.at<uchar>(nn + 2, 3 * j + 2) = QR_LH.at<uchar>(i, j);
-		}
-		nn += 3;
-	}
-
-	//	imshow("HH_QRcode", BIG_QR_HH);
-	//imshow("DWT_DCT_CRT_HL_QRcode", BIG_QR_HL);
-	imshow("DWT_DCT_CRT_LH_QRcode", BIG_QR_LH);
-
-	//	imwrite("HH_QRcode.png", BIG_QR_HH);
-	//	imwrite("HL_QRcode.png", BIG_QR_HL);
-	imwrite("C:/Users/KJY/Desktop/result/m65n361/DWT_DCT_CRT_LH_QRcode.png", BIG_QR_LH);
-	imwrite("C:/Users/KJY/Desktop/result/m65n361/DWT_DCT_CRT_LH_QRcode3232.png", LH_recoverd_QRcode_Pixel);
-
-	getNCC();      // »ğÀÔµÈ ¿öÅÍ¸¶Å©¿Í ÃßÃâµÈ ¿öÅÍ¸¶Å© °£ NCC °ª °è»ê
-}
-
-/* DCT-CRT ÃßÃâ 512512
+/* DCT-CRT ì¶”ì¶œ 512512
 void Extract(Mat& Marked_Image)
 {
 	//imshow("Marked_Image", Marked_Image);
 	////////////////////////////////
-	getPSNR(Marked_Image);         // ¿øº» ÀÌ¹ÌÁö¿Í »ğÀÔ ÀÌ¹ÌÁöÀÇ PSNR °ª °è»êÀ» À§ÇÔ
+	getPSNR(Marked_Image);         // ì›ë³¸ ì´ë¯¸ì§€ì™€ ì‚½ì… ì´ë¯¸ì§€ì˜ PSNR ê°’ ê³„ì‚°ì„ ìœ„í•¨
 	//getSSIM(Marked_Image);
 	////////////////////////////////
 	Mat yuv_arr[3];
 	cvtColor(Marked_Image, Marked_Image, COLOR_RGB2YCrCb);   // RGB to YCrCb
-	split(Marked_Image, yuv_arr);                      // Ã¤³Î ºĞ¸®
+	split(Marked_Image, yuv_arr);                      // ì±„ë„ ë¶„ë¦¬
 	Mat Marked_Y_channel = Mat(Marked_Image.cols, Marked_Image.rows, Marked_Image.type());
 	int QRcodeSize;
 
@@ -473,12 +289,12 @@ void Extract(Mat& Marked_Image)
 
 	Mat ori_recoverd_QRcode_Pixel = Mat(32, 32, CV_8UC1);
 
-	// DCT¸¦ ÁøÇàÇÒ 8x8 Å©±âÀÇ ºí·°µé
+	// DCTë¥¼ ì§„í–‰í•  8x8 í¬ê¸°ì˜ ë¸”ëŸ­ë“¤
 	Size blockSize(8, 8);
 	vector<Mat> ori_blocks;
 	int i = 0;
 
-	// 256x256 Å©±âÀÇ ºÎ´ë¿ªÀ» 1024°³ÀÇ 8x8 ºí·° »çÀÌÁî·Î ºĞÇÒ
+	// 256x256 í¬ê¸°ì˜ ë¶€ëŒ€ì—­ì„ 1024ê°œì˜ 8x8 ë¸”ëŸ­ ì‚¬ì´ì¦ˆë¡œ ë¶„í• 
 	for (int y = 0; y < 256; y += blockSize.height)
 	{
 		for (int x = 0; x < 256; x += blockSize.width)
@@ -489,18 +305,18 @@ void Extract(Mat& Marked_Image)
 	}
 
 	int x = 0, y = 0;
-	// 1024°³ÀÇ 8*8 ºí·Ï¿¡ dct Àû¿ë ÈÄ °ª Ãâ·Â
+	// 1024ê°œì˜ 8*8 ë¸”ë¡ì— dct ì ìš© í›„ ê°’ ì¶œë ¥
 	for (int i = 0; i < 1024; i++)
 	{
 		dct(ori_blocks[i], ori_blocks[i]);
 	}
-	// °¢ ºÎ´ë¿ªÀÇ 1024°³ÀÇ ºí·°µéÀ» ´ë»óÀ¸·Î »ğÀÔµÈ ¿öÅÍ¸¶Å© ÃßÃâ ÁøÇà
+	// ê° ë¶€ëŒ€ì—­ì˜ 1024ê°œì˜ ë¸”ëŸ­ë“¤ì„ ëŒ€ìƒìœ¼ë¡œ ì‚½ì…ëœ ì›Œí„°ë§ˆí¬ ì¶”ì¶œ ì§„í–‰
 	for (int i = 0; i < 1024; i++)
 	{
 		int Z_ori = ori_blocks[i].at<float>(0, 0);
 		if (Z_ori == 40 || Z_ori == 44)
 		{
-			//if()// ¿©±â¿¡ ¸ğµç ÇÈ¼¿ÀÌ °°À» Á¶°Ç Ãß°¡(´Ü»ö ÀÌ¹ÌÁö¿¡¸¸ ÇØ´ç½ÃÅ°±â À§ÇØ) ÇÏ¸é ´õ ÁÁÀ»µí
+			//if()// ì—¬ê¸°ì— ëª¨ë“  í”½ì…€ì´ ê°™ì„ ì¡°ê±´ ì¶”ê°€(ë‹¨ìƒ‰ ì´ë¯¸ì§€ì—ë§Œ í•´ë‹¹ì‹œí‚¤ê¸° ìœ„í•´) í•˜ë©´ ë” ì¢‹ì„ë“¯
 			Z_ori += 60;
 		}
 		int p_ori = Z_ori % m;
@@ -508,7 +324,7 @@ void Extract(Mat& Marked_Image)
 		int d_ori = abs(p_ori - q_ori);
 		int b_ori = p_ori + q_ori;
 
-		// ±âÁØ °ªÀ» ´ë»óÀ¸·Î QRÀÇ Èò ºÎºĞ°ú °ËÀº ºÎºĞ ±¸¼º
+		// ê¸°ì¤€ ê°’ì„ ëŒ€ìƒìœ¼ë¡œ QRì˜ í° ë¶€ë¶„ê³¼ ê²€ì€ ë¶€ë¶„ êµ¬ì„±
 		if (b_ori >= (D + 35) / 2) // watermark bit 1    d_ori >= (D) / 2  b_ori >= (D + 35) / 2
 		{
 			ori_recoverd_QRcode_Pixel.at<uchar>((int)(y), (int)(x++)) = 255;
@@ -524,11 +340,11 @@ void Extract(Mat& Marked_Image)
 		}
 	}
 
-	// QRcode¸¦ »ı¼ºÇÒ Çà·Ä º¯¼ö ¼³Á¤
+	// QRcodeë¥¼ ìƒì„±í•  í–‰ë ¬ ë³€ìˆ˜ ì„¤ì •
 	QRcodeSize = ori_recoverd_QRcode_Pixel.rows;
 	Mat QR_ori(QRcodeSize + 2, QRcodeSize + 2, ori_recoverd_QRcode_Pixel.type(), Scalar(255));
 
-	// °áÁ¤µÈ QRcodeÀÇ ÇÈ¼¿ °ªÀ» À§Ä¡¿¡ ¸Â°Ô ÀúÀå
+	// ê²°ì •ëœ QRcodeì˜ í”½ì…€ ê°’ì„ ìœ„ì¹˜ì— ë§ê²Œ ì €ì¥
 	for (int i = 0; i < 32; i++)
 	{
 		for (int j = 0; j < 32; j++)
@@ -540,7 +356,7 @@ void Extract(Mat& Marked_Image)
 	Mat BIG_QR_ori(100, 100, ori_recoverd_QRcode_Pixel.type(), Scalar(255));
 
 	int nn = 0;
-	// 32x32 Å©±âÀÇ QRÀÇ Å©±â È®Àå
+	// 32x32 í¬ê¸°ì˜ QRì˜ í¬ê¸° í™•ì¥
 	for (int i = 0; i < 32; i++)
 	{
 		for (int j = 0; j < 32; j++)
@@ -562,6 +378,6 @@ void Extract(Mat& Marked_Image)
 	imwrite("C:/Users/KJY/Desktop/result/[lena512]DCT_CRT_QRcode.png", BIG_QR_ori);
 	//imwrite("C:/Users/KJY/Desktop/result/m65n361/DCT_CRT_QRcode.png", BIG_QR_ori);
 
-	getNCC();      // »ğÀÔµÈ ¿öÅÍ¸¶Å©¿Í ÃßÃâµÈ ¿öÅÍ¸¶Å© °£ NCC °ª °è»ê
+	getNCC();      // ì‚½ì…ëœ ì›Œí„°ë§ˆí¬ì™€ ì¶”ì¶œëœ ì›Œí„°ë§ˆí¬ ê°„ NCC ê°’ ê³„ì‚°
 }
 */
