@@ -1,4 +1,4 @@
-# forensic-watermarking with @ms4935, @15computer
+# forensic-watermarking with @ms4935, @15computer @jyeonyu
 DWT-DCT-CRT
 
 
