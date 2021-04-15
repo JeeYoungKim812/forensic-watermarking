@@ -1,6 +1,9 @@
 # forensic-watermarking
 DWT-DCT-CRT
 
+## 사용기술
+C++
+openCV 라이브러리
 
 ## 목표
 
