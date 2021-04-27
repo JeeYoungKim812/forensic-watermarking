@@ -1,6 +1,11 @@
 # forensic-watermarking
 DWT-DCT-CRT
 
+DWT 사용 이유
+DCT 사용 이유
+CRT 사용 이뷰
+
+
 ## 사용기술
 C++
 openCV 라이브러리
